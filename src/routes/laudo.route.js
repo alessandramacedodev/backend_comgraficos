@@ -33,10 +33,7 @@ const { authenticate, authorize } = require('../middlewares/auth')
  *         tipoLaudo:
  *           type: string
  *           description: Tipo do laudo
- *          autor: 
-            type: String,
-            description: autor do laudo
-            conteudo:
+ *          conteudo:
  *           type: string
  *           description: Conteúdo geral do laudo
  *         introducao:
