@@ -5,14 +5,14 @@ const mongoose = require('mongoose')
 // Criar usuário
 const createUsuario = async (req, res) => {
     try {
-        const novoUsuario = new Usuario({
+        const usuario = new Usuario({
             nome: req.body.nome,
             email: req.body.email,
             senha: req.body.senha,
             perfil: req.body.perfil
         })
-        await novoUsuario.save()
-        res.status(201).json({ message: 'Usuário cadastrado com sucesso!', usuario: novoUsuario })
+        await usuario.save()
+        res.status(201).json({ message: 'Usuário cadastrado com sucesso!', usuario: usuario })
     } catch (err) {
         console.error('Erro ao cadastrar usuário:', err)
         res.status(500).json({ error: 'Erro ao cadastrar usuário.', details: err.message })
@@ -22,7 +22,7 @@ const createUsuario = async (req, res) => {
 // Listar todos os usuários
 const getUsuarios = async (req, res) => {
     try {
-        const usuarios = await Usuario.find().select('-senha')
+        const usuario = await Usuario.find().select('-senha')
         res.status(200).json(usuarios)
     } catch (err) {
         console.error('Erro ao listar usuários:', err)
