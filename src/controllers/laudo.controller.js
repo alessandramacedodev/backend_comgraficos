@@ -8,7 +8,6 @@ const createLaudo = async (req, res) => {
             numeroLaudo: req.body.numeroLaudo,
             dataEmissao: req.body.dataEmissao,
             tipoLaudo: req.body.tipoLaudo,
-            autor: req.body.autor,
             conteudoLaudo: {
                 introducao: req.body.conteudoLaudo.introducao,
                 metodologia: req.body.conteudoLaudo.metodologia,
@@ -25,7 +24,6 @@ const createLaudo = async (req, res) => {
             numeroLaudo: laudo.numeroLaudo,
             dataEmissao: laudo.dataEmissao.toISOString().split('T')[0],  
             tipoLaudo: laudo.tipoLaudo,
-            autor: req.body.autor,
             conteudoLaudo: laudo.conteudoLaudo
         };
 
