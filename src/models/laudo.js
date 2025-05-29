@@ -22,11 +22,6 @@ const laudoSchema = new mongoose.Schema({
         required: true
     },
 
-    autor: {
-            type: String,
-            required: true
-    },
-
     conteudoLaudo: {
         type: new mongoose.Schema({
             introducao: {
