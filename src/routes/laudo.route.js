@@ -1,5 +1,5 @@
 const express = require('express')
-const laudoController = require('../controllers/laudo.controller') // Nome padronizado
+const LaudoController = require('../controllers/laudo.controller')
 const router = express.Router()
 const { authenticate, authorize } = require('../middlewares/auth')
 
@@ -7,56 +7,50 @@ const { authenticate, authorize } = require('../middlewares/auth')
  * @swagger
  * tags:
  *   name: Laudos
- *   description: API para gerenciamento de laudos
+ *   description: API para gerenciamento de laudos periciais
  */
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     ConteudoLaudo:
- *       type: object
- *       properties:
- *         introducao:
- *           type: string
- *           description: Introdução do laudo
- *         metodologia:
- *           type: string
- *           description: Metodologia utilizada no laudo
- *         analiseEresultados:
- *           type: string
- *           description: Resultados da análise do laudo
- *         conclusao:
- *           type: string
- *           description: Conclusão do laudo
  *     Laudo:
  *       type: object
  *       properties:
  *         _id:
  *           type: string
- *           description: ID do laudo (gerado automaticamente)
- *         tituloLaudo:
+ *           description: ID gerado automaticamente
+ *         title:
  *           type: string
  *           description: Título do laudo
  *         numeroLaudo:
  *           type: string
- *           description: Número de identificação do laudo
+ *           description: Número do laudo
  *         dataEmissao:
  *           type: string
  *           format: date
  *           description: Data de emissão do laudo
  *         tipoLaudo:
  *           type: string
- *           enum: [Preliminar, Final]
  *           description: Tipo do laudo
- *         conteudoLaudo:
- *           $ref: '#/components/schemas/ConteudoLaudo'
- *         expertResponsible:
+ *          autor: 
+            type: String,
+            description: autor do laudo
+            conteudo:
  *           type: string
- *           description: ID do usuário responsável pelo laudo
- *         evidence:
+ *           description: Conteúdo geral do laudo
+ *         introducao:
  *           type: string
- *           description: ID da evidência associada ao laudo
+ *           description: Introdução do laudo
+ *         metodologia:
+ *           type: string
+ *           description: Metodologia utilizada no laudo
+ *         analiseResultados:
+ *           type: string
+ *           description: Análise dos resultados obtidos
+ *         conclusao:
+ *           type: string
+ *           description: Conclusão do laudo
  */
 
 /**
@@ -73,20 +67,11 @@ const { authenticate, authorize } = require('../middlewares/auth')
  *             $ref: '#/components/schemas/Laudo'
  *     responses:
  *       201:
- *         description: Laudo adicionado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 laudo:
- *                   $ref: '#/components/schemas/Laudo'
+ *         description: Laudo criado com sucesso
  *       500:
- *         description: Erro ao adicionar laudo
+ *         description: Erro ao criar laudo
  */
-router.post('/', authenticate, authorize(['admin', 'perito']), laudoController.createlaudo)
+router.post('/', authenticate, authorize(['admin', 'perito']), LaudoController.createLaudo)
 
 /**
  * @swagger
@@ -96,27 +81,21 @@ router.post('/', authenticate, authorize(['admin', 'perito']), laudoController.c
  *     tags: [Laudos]
  *     responses:
  *       200:
- *         description: Lista de laudos retornada com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Laudo'
+ *         description: Lista de laudos
  *       500:
- *         description: Erro ao listar os laudos
+ *         description: Erro ao buscar laudos
  */
-router.get('/', authenticate, authorize(['admin', 'perito', 'assistente']), laudoController.getlaudo)
+router.get('/', authenticate, authorize(['admin', 'perito', 'assistente']), LaudoController.getLaudo)
 
 /**
  * @swagger
  * /api/laudos/{id}:
  *   get:
- *     summary: Retorna um laudo pelo ID
+ *     summary: Busca um laudo por ID
  *     tags: [Laudos]
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
@@ -124,44 +103,10 @@ router.get('/', authenticate, authorize(['admin', 'perito', 'assistente']), laud
  *     responses:
  *       200:
  *         description: Laudo encontrado
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Laudo'
  *       404:
  *         description: Laudo não encontrado
- *       500:
- *         description: Erro ao buscar laudo
  */
-router.get('/:id', authenticate, authorize(['admin', 'perito', 'assistente']), laudoController.getlaudoById)
-
-/**
- * @swagger
- * /api/laudos/{id}/pdf:
- *   get:
- *     summary: Gera um PDF de um laudo
- *     tags: [Laudos]
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
- *         description: ID do laudo para gerar o PDF
- *     responses:
- *       200:
- *         description: PDF do laudo gerado com sucesso
- *         content:
- *           application/pdf:
- *             schema:
- *               type: string
- *               format: byte
- *       404:
- *         description: Laudo não encontrado
- *       500:
- *         description: Erro ao gerar PDF do laudo
- */
-router.get('/:id/pdf', authenticate, authorize(['admin', 'perito']), laudoController.generatelaudoPdf)
+router.get('/:id', authenticate, authorize(['admin', 'perito', 'assistente']), LaudoController.getLaudoById)
 
 /**
  * @swagger
@@ -170,12 +115,12 @@ router.get('/:id/pdf', authenticate, authorize(['admin', 'perito']), laudoContro
  *     summary: Atualiza um laudo existente
  *     tags: [Laudos]
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do laudo a ser atualizado
+ *         description: ID do laudo
  *     requestBody:
  *       required: true
  *       content:
@@ -185,44 +130,33 @@ router.get('/:id/pdf', authenticate, authorize(['admin', 'perito']), laudoContro
  *     responses:
  *       200:
  *         description: Laudo atualizado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 updatedLaudo:
- *                   $ref: '#/components/schemas/Laudo'
  *       400:
- *         description: ID inválido ou laudo não encontrado
+ *         description: Dados inválidos
  *       500:
  *         description: Erro ao atualizar laudo
  */
-router.put('/:id', authenticate, authorize(['admin', 'perito']), laudoController.updatelaudo)
+router.put('/:id', authenticate, authorize(['admin', 'perito']), LaudoController.updateLaudo)
 
 /**
  * @swagger
  * /api/laudos/{id}:
  *   delete:
- *     summary: Deleta um laudo pelo ID
+ *     summary: Deleta um laudo por ID
  *     tags: [Laudos]
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do laudo a ser deletado
+ *         description: ID do laudo
  *     responses:
  *       200:
  *         description: Laudo deletado com sucesso
  *       404:
  *         description: Laudo não encontrado
- *       500:
- *         description: Erro ao deletar laudo
  */
-router.delete('/:id', authenticate, authorize(['admin']), laudoController.deletelaudoById)
+router.delete('/:id', authenticate, authorize(['admin']), LaudoController.deleteLaudoById)
 
 /**
  * @swagger
@@ -232,10 +166,10 @@ router.delete('/:id', authenticate, authorize(['admin']), laudoController.delete
  *     tags: [Laudos]
  *     responses:
  *       200:
- *         description: Todos os laudos foram deletados com sucesso
+ *         description: Todos os laudos deletados
  *       500:
- *         description: Erro ao deletar todos os laudos
+ *         description: Erro ao deletar laudos
  */
-router.delete('/', authenticate, authorize(['admin']), laudoController.deletelaudo)
+router.delete('/', authenticate, authorize(['admin']), LaudoController.deleteLaudo)
 
 module.exports = router

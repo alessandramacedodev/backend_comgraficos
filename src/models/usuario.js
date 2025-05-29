@@ -2,30 +2,31 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-//esquema de usuario
+// Esquema de usuário
 const usuarioSchema = new mongoose.Schema({
     nome: {
         type: String,
-        required: true, 
+        required: true,
         trim: true
     },
     email: {
         type: String,
-        required: true, 
-        trim: true,
-        unique: true
+        required: true,
+        unique: true,
+               
     },
     senha: {
         type: String,
-        required: true,
+        required: true
     },
-    perfil:{
+    perfil: {
         type: String,
-        enum: ['admin','perito','assistente'],
+        enum: ['admin', 'perito', 'assistente'],
         default: 'assistente'
     }
-})
-//seguerança da senha 
+}, { timestamps: true })
+
+// Hash da senha antes de salvar
 usuarioSchema.pre('save', async function (next) {
     if (!this.isModified('senha')) return next()
     const salt = await bcrypt.genSalt(10)
@@ -33,16 +34,14 @@ usuarioSchema.pre('save', async function (next) {
     next()
 })
 
-//gera JWT
-usuarioSchema.methods.generateTokenJWT = function() {
-    const jwt = require('jsonwebtoken')
+// Método para gerar o token JWT
+usuarioSchema.methods.generateTokenJWT = function () {
     return jwt.sign(
-        {id: this._id, perfil: this.perfil},
+        { id: this._id, perfil: this.perfil },
         process.env.JWT_SECRET,
-        {expiresIn: process.env.JWT_EXPIRES_IN || '1d'}
+        { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
     )
 }
 
-
-const Usuario = mongoose.model ('Usuario', usuarioSchema)
+const Usuario = mongoose.model('Usuario', usuarioSchema)
 module.exports = Usuario

@@ -55,18 +55,18 @@ const evidenciaSchema = new mongoose.Schema({
     // Usuário que coletou a evidência
     coletadoPor: {
         type: mongoose.Schema.ObjectId,
-        ref: 'usuario',
+        ref: 'Usuario',
         required: true
     },
 
     // Caso relacionado à evidência
-    case: {
+    caso: {
         type: mongoose.Schema.ObjectId,
-        ref: 'caso',
+        ref: 'Caso',
         required: true
     }
 
 }, { timestamps: true });
 
 const Evidencia = mongoose.model('Evidencia', evidenciaSchema);
-module.exports = Evidencia;
+module.exports = Evidencia

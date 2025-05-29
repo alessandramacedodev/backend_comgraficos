@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 // Definição do schema do caso (perícia), com informações completas
 const casoSchema = new mongoose.Schema({
 
-    // Número do caso (único e obrigatório)
+    // Número do caso 
     numeroDoCaso: {
         type: String,
         required: true,
@@ -27,8 +27,8 @@ const casoSchema = new mongoose.Schema({
     // Status atual do caso
     status: {
         type: String,
-        enum: ['em_andamento', 'finalizado', 'arquivado'],
-        default: 'em_andamento'
+        enum: ['em andamento', 'finalizado', 'arquivado'],
+        default: 'em andamento'
     },
 
     // Local do ocorrido
@@ -36,7 +36,7 @@ const casoSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        minlength: 10,
+        minlength: 5,
         maxlength: 1000
     },
 
@@ -73,4 +73,4 @@ const casoSchema = new mongoose.Schema({
 const Caso = mongoose.model('Caso', casoSchema);
 
 // Exporta o modelo para uso em outras partes do sistema
-module.exports = Caso;
+module.exports = Caso

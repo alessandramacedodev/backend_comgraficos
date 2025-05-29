@@ -15,7 +15,7 @@ const storage = new CloudinaryStorage({
       }
   
       return {
-        folder: 'stpericial',
+        folder: 'odontoforense',
         allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'pdf'],
         resource_type: resourceType,
       }

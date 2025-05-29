@@ -5,11 +5,13 @@ const createEvidencia = async (req, res) => {
         const fileUrl = req.file ? req.file.path : req.body.fileUrl;
         const evidencia = new Evidencia({
             fileUrl: fileUrl,
-            nomeDaEvidencia: req.body.nomeDaEvidencia, 
+            nome_evidencia: req.body.nome_evidencia, 
             categoria: req.body.categoria, 
-            dataDaColeta: req.body.dataDaColeta,
+            data_coleta: req.body.data_coleta,
             descricao: req.body.descricao, 
-            localDaRetirada: req.body.localDaRetirada,
+            local_retirada: req.body.local_retirada,
+            coletadoPor: req.body.coletadoPor,
+            caso: req.body.caso
         })
         await evidencia.save()
         res.status(201).json({message: 'Evidência adicionado com sucesso!', evidencia: evidencia})
@@ -21,7 +23,7 @@ const createEvidencia = async (req, res) => {
 
 const getEvidencia = async (req, res) => {
     try {
-        const evidences = await Evidencia.find()
+        const evidencia = await Evidencia.find()
         res.status(201).json(evidencia)
     } catch (err) {
         console.error({message: 'Erro ao listar as evidências:', err});
@@ -88,7 +90,7 @@ const deleteEvidenciaById = async (req, res) => {
 const deleteEvidencia = async (req, res) => {
     try {
         const deleteEvidencia = await Evidencia.deleteMany()
-        res.status(200).json({message: 'Todos as evidências foram deletadas com sucesso!', deletedCount: deleteEvidencia.EvidenciadeletedCount})
+        res.status(200).json({message: 'Todas as evidências foram deletadas com sucesso!', deletedCount: deleteEvidencia.deletedCount})
     } catch (err) {
         console.error('Erro ao deletar todas as evidências:', err)
         res.status(500).json({error: 'Erro ao deletar todas as evidências.'})

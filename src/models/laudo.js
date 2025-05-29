@@ -1,49 +1,56 @@
 const mongoose = require('mongoose');
 
-const laudo = new mongoose.Schema({
-    // Título do laudo
+const laudoSchema = new mongoose.Schema({
     tituloLaudo: {
         type: String,
         required: true,
         trim: true
     },
-    // Número do laudo
     numeroLaudo: {
         type: String,
         required: true,
         unique: true,
         trim: true
     },
-    // Data de emissão
     dataEmissao: {
         type: Date,
         required: true
     },
-    // Tipo do laudo
     tipoLaudo: {
         type: String,
         enum: ['preliminar', 'final', 'complementar'],
         required: true
     },
-    // Estrutura do conteúdo do laudo
+
+    autor: {
+            type: String,
+            required: true
+    },
+
     conteudoLaudo: {
-        introducao: {
-            type: String,
-            required: true
-        },
-        metodologia: {
-            type: String,
-            required: true
-        },
-        analiseEresultados: {
-            type: String,
-            required: true
-        },
-        conclusao: {
-            type: String,
-            required: true
-        }
+        type: new mongoose.Schema({
+            introducao: {
+                type: String,
+                required: true
+            },
+            metodologia: {
+                type: String,
+                required: true
+            },
+            analiseeResultados: {
+                type: String,
+                required: true
+            },
+            conclusao: {
+                type: String,
+                required: true
+            }
+        }, { _id: false })  
     }
 });
 
-module.exports = mongoose.model('Laudo', laudoSchema);
+
+const Laudo = mongoose.model ('Laudo', laudoSchema);
+module.exports = Laudo
+
+

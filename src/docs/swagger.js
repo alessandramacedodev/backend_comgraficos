@@ -11,7 +11,7 @@ const options = {
         },
         servers: [
             {
-                url: https://stpericial-back-end.onrender.com/ //FALTA FAZER!
+                url: 'http://localhost:3000/'
             },
         ],
         components: {

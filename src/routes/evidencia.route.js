@@ -1,5 +1,5 @@
 const express = require('express')
-const evidenciacontroller = require('../controllers/evidencia.controller')
+const EvidenciaController = require('../controllers/evidencia.controller')
 const { authenticate, authorize } = require('../middlewares/auth')
 const upload = require('../middlewares/upload')
 const router = express.Router()
@@ -89,7 +89,7 @@ const router = express.Router()
  *       500:
  *         description: Erro ao adicionar evidência
  */
-router.post( '/', authenticate, authorize(['admin', 'perito', 'assistente']), upload.single('file'), evidenciacontroller.createEvidencia); npm
+router.post( '/', authenticate, authorize(['admin', 'perito', 'assistente']), upload.single('file'), EvidenciaController.createEvidencia) 
 
 /**
  * @swagger
@@ -109,7 +109,7 @@ router.post( '/', authenticate, authorize(['admin', 'perito', 'assistente']), up
  *       500:
  *         description: Erro ao listar as evidências
  */
-router.get('/',authenticate,authorize(['admin', 'perito', 'assistente']),evidenciacontroller.getEvidencia)
+router.get('/',authenticate,authorize(['admin', 'perito', 'assistente']),EvidenciaController.getEvidencia)
 
 /**
  * @swagger
@@ -136,7 +136,7 @@ router.get('/',authenticate,authorize(['admin', 'perito', 'assistente']),evidenc
  *       500:
  *         description: Erro ao buscar evidência
  */
-router.get('/:id',authenticate,authorize(['admin','perito','assistente']),evidenciacontroller.getEvidenciaById)
+router.get('/:id',authenticate,authorize(['admin','perito','assistente']),EvidenciaController.getEvidenciaById)
 
 /**
  * @swagger
@@ -174,7 +174,7 @@ router.get('/:id',authenticate,authorize(['admin','perito','assistente']),eviden
  *       500:
  *         description: Erro ao atualizar evidência
  */
-router.put('/:id',authenticate,authorize(['admin', 'perito', 'assistente']),evidenciacontroller.updateEvidencia)
+router.put('/:id',authenticate,authorize(['admin', 'perito', 'assistente']),EvidenciaController.updateEvidencia)
 
 
 /**
@@ -198,7 +198,7 @@ router.put('/:id',authenticate,authorize(['admin', 'perito', 'assistente']),evid
  *       500:
  *         description: Erro ao deletar evidência
  */
-router.delete('/:id',authenticate, authorize(['admin']),evidenciacontroller.deleteEvidenciaById)
+router.delete('/:id',authenticate, authorize(['admin']),EvidenciaController.deleteEvidenciaById)
 
 /**
  * @swagger
@@ -212,6 +212,6 @@ router.delete('/:id',authenticate, authorize(['admin']),evidenciacontroller.dele
  *       500:
  *         description: Erro ao deletar todas as evidências
  */
-router.delete('/',authenticate,authorize(['admin']),evidenciacontroller.deleteEvidencia)
+router.delete('/',authenticate,authorize(['admin']),EvidenciaController.deleteEvidencia)
 
 module.exports = router

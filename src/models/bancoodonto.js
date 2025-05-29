@@ -2,15 +2,9 @@ const mongoose = require('mongoose');
 
 const bancoodontoSchema = new mongoose.Schema({
     // Tipo do registro: ante-mortem ou post-mortem
-    tipo: {
+    tipodoregistro: {
         type: String,
         enum: ['ante-mortem', 'post-mortem'],
-        required: true
-    },
-
-    // Data do registro
-    dataRegistro: {
-        type: Date,
         required: true
     },
 
@@ -20,37 +14,43 @@ const bancoodontoSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
+    
+    // Data do registro
+    dataRegistro: {
+        type: Date,
+        required: true
+    },
 
     // Status do registro
     status: {
         type: String,
-        enum: ['ativo', 'inativo'],
-        default: 'ativo'
+        enum: ['identificado', 'não identificado'],
+        default: 'identificado'
     },
 
-    // Tipo de dentição
-    tipoDenticao: {
-        type: String,
-        enum: ['decídua', 'permanente', 'mista'],
-        required: true
-    },
+    // Conteúdo do laudo agrupando os três campos
+    conteudoLaudo: {
+        tipoDenticao: {
+            type: String,
+            enum: ['decídua', 'permanente', 'mista'],
+            default: 'mista'
+        },
 
-    // Características específicas observadas
-    caracteristicasEspecificas: {
-        type: [String],
-        enum: ['dentes ausentes', 'implante', 'ponte', 'coroa', 'restaurações'],
-        default: []
-    },
+        caracteristicasEspecificas: {
+            type: String,
+            enum: ['dentes ausentes', 'implante', 'ponte', 'coroa', 'restaurações'],
+            default: 'restaurações'
+        },
 
-    // Região da arcada dentária
-    regiao: {
-        type: [String],
-        enum: ['anterior', 'posterior', 'maxila', 'mandíbula'],
-        default: []
+        regiao: {
+            type: [String],
+            enum: ['anterior', 'posterior', 'maxila', 'mandíbula'],
+            default: 'anterior'
+        }
     },
 
     // URL do arquivo relacionado ao registro
-    fileUrl: {
+    fileURL: {
         type: String,
         required: true,
         validate: {
@@ -68,5 +68,5 @@ const bancoodontoSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-const bancoodonto = mongoose.model('bancoodonto', bancoodontoSchema);
-module.exports = bancoodonto;
+const Bancoodonto = mongoose.model('Bancoodonto', bancoodontoSchema);
+module.exports = Bancoodonto;
