@@ -20,12 +20,12 @@ async function authenticate(req, res, next) {
     }
 }
 
-function authorize(roles = []) {
-    if(typeof roles === 'string') {
-        roles = [roles]
+function authorize(perfis = []) {
+    if(typeof perifl === 'string') {
+        perfis = [perfis]
     }
     return (req, res, next) => {
-        if(!roles.includes(req.user.role)) {
+        if(!perfis.includes(req.user.perfil)) {
             return res.status(403).json({message: 'Acesso negado: permissão insuficiente'})
         }
         next()
