@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
   LinearScale,
@@ -23,127 +23,17 @@ ChartJS.register(
   PointElement
 );
 
-// Dados simulados de "bancoodonto.js"
-const registros = [
-  {
-    tipoDoRegistro: "ante-mortem",
-    conteudoLaudo: {
-      tipoDenticao: "permanente",
-      caracteristicasEspecificas: "coroas",
-      regiao: "anterior",
-    },
-  },
-  {
-    tipoDoRegistro: "post-mortem",
-    conteudoLaudo: {
-      tipoDenticao: "permanente",
-      caracteristicasEspecificas: "implante",
-      regiao: "mandibula",
-    },
-  },
-  {
-    tipoDoRegistro: "ante-mortem",
-    conteudoLaudo: {
-      tipoDenticao: "mista",
-      caracteristicasEspecificas: "restaurações",
-      regiao: "mandibula",
-    },
-  },
-  {
-    tipoDoRegistro: "post-mortem",
-    conteudoLaudo: {
-      tipoDenticao: "permanente",
-      caracteristicasEspecificas: "dentes ausentes",
-      regiao: "mandibula",
-    },
-  },
-  {
-    tipoDoRegistro: "ante-mortem",
-    conteudoLaudo: {
-      tipoDenticao: "permanente",
-      caracteristicasEspecificas: "implante",
-      regiao: "posterior",
-    },
-  },
-  {
-    tipoDoRegistro: "post-mortem",
-    conteudoLaudo: {
-      tipoDenticao: "permanente",
-      caracteristicasEspecificas: "pontes",
-      regiao: "posterior",
-    },
-  },
-  {
-    tipoDoRegistro: "ante-mortem",
-    conteudoLaudo: {
-      tipoDenticao: "permanente",
-      caracteristicasEspecificas: "dentes ausentes",
-      regiao: "anterior",
-    },
-  },
-];
-
 // Função de contagem
 const contarOcorrencias = (array, campo) => {
   const contagem = {};
   array.forEach((item) => {
     const valor =
-      campo === "tipoDoRegistro" ? item[campo] : item.conteudoLaudo[campo];
-    contagem[valor] = (contagem[valor] || 0) + 1;
+      campo === "tipoDoRegistro" ? item[campo] : item.conteudoLaudo?.[campo];
+    if (valor) {
+      contagem[valor] = (contagem[valor] || 0) + 1;
+    }
   });
   return contagem;
-};
-
-// Dados para gráfico de barras (tipo de registro)
-const tipoRegistroCount = contarOcorrencias(registros, "tipoDoRegistro");
-
-const barData = {
-  labels: Object.keys(tipoRegistroCount),
-  datasets: [
-    {
-      label: "Tipo de Registro",
-      data: Object.values(tipoRegistroCount),
-      backgroundColor: ["rgba(255,99,132,0.6)", "rgba(54,162,235,0.6)"],
-    },
-  ],
-};
-
-// Dados para gráfico de pizza (tipo de dentição)
-const denticaoCount = contarOcorrencias(registros, "tipoDenticao");
-
-const pieData = {
-  labels: Object.keys(denticaoCount),
-  datasets: [
-    {
-      label: "Tipo de Dentição",
-      data: Object.values(denticaoCount),
-      backgroundColor: [
-        "rgba(255, 205, 86, 0.6)",
-        "rgba(75, 192, 192, 0.6)",
-        "rgba(153, 102, 255, 0.6)",
-      ],
-    },
-  ],
-};
-
-// Dados para gráfico de linha (características específicas)
-const caracteristicasCount = contarOcorrencias(
-  registros,
-  "caracteristicasEspecificas"
-);
-
-const lineData = {
-  labels: Object.keys(caracteristicasCount),
-  datasets: [
-    {
-      label: "Características Específicas",
-      data: Object.values(caracteristicasCount),
-      borderColor: "rgba(255,99,132,1)",
-      backgroundColor: "rgba(255,99,132,0.2)",
-      tension: 0.4,
-      fill: true,
-    },
-  ],
 };
 
 const chartOptions = {
@@ -156,6 +46,69 @@ const chartOptions = {
 };
 
 const Barchart = () => {
+  const [registros, setRegistros] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/registros") // Altere para a URL da sua API
+      .then((res) => res.json())
+      .then((data) => {
+        setRegistros(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar dados:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <p>Carregando gráficos...</p>;
+  if (!registros.length) return <p>Nenhum dado encontrado.</p>;
+
+  const tipoRegistroCount = contarOcorrencias(registros, "tipoDoRegistro");
+  const denticaoCount = contarOcorrencias(registros, "tipoDenticao");
+  const caracteristicasCount = contarOcorrencias(registros, "caracteristicasEspecificas");
+
+  const barData = {
+    labels: Object.keys(tipoRegistroCount),
+    datasets: [
+      {
+        label: "Tipo de Registro",
+        data: Object.values(tipoRegistroCount),
+        backgroundColor: ["rgba(255,99,132,0.6)", "rgba(54,162,235,0.6)"],
+      },
+    ],
+  };
+
+  const pieData = {
+    labels: Object.keys(denticaoCount),
+    datasets: [
+      {
+        label: "Tipo de Dentição",
+        data: Object.values(denticaoCount),
+        backgroundColor: [
+          "rgba(255, 205, 86, 0.6)",
+          "rgba(75, 192, 192, 0.6)",
+          "rgba(153, 102, 255, 0.6)",
+        ],
+      },
+    ],
+  };
+
+  const lineData = {
+    labels: Object.keys(caracteristicasCount),
+    datasets: [
+      {
+        label: "Características Específicas",
+        data: Object.values(caracteristicasCount),
+        borderColor: "rgba(255,99,132,1)",
+        backgroundColor: "rgba(255,99,132,0.2)",
+        tension: 0.4,
+        fill: true,
+      },
+    ],
+  };
+
   return (
     <div style={{ background: "#f8f9fa", padding: "2rem", borderRadius: "1rem" }}>
       <h2>Gráfico de Colunas: Tipo de Registro</h2>
