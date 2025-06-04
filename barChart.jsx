@@ -50,7 +50,7 @@ const Barchart = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3001/registros") 
+    fetch("http://localhost:3001/api/bancoodonto")
       .then((res) => res.json())
       .then((data) => {
         setRegistros(data);
